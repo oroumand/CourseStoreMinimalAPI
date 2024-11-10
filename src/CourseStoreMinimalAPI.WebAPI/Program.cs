@@ -5,7 +5,6 @@ using CourseStoreMinimalAPI.WebAPI.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.ConfigureServices();
-var app = builder.Build();
+var app = builder.ConfigureServices();
 app.ConfigurePipeline();
 app.Run();
