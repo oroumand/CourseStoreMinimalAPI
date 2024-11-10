@@ -12,6 +12,7 @@ namespace CourseStoreMinimalAPI.WebAPI.Extensions
         public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
         {
             IConfiguration configuration = builder.Configuration;
+            int cacheDefaultExpirationTime = configuration.GetSection("DefaultExpirationTime").Get<int>();
             builder.Services.AddOutputCache();
 
             builder.Services.AddEndpointsApiExplorer();
@@ -21,7 +22,10 @@ namespace CourseStoreMinimalAPI.WebAPI.Extensions
 
             builder.Services.AddScoped<CategoryServices>();
             builder.Services.AddAutoMapper(typeof(Program));
-
+            builder.Services.AddOutputCache(options =>
+            {
+                options.AddBasePolicy(c => c.Expire(TimeSpan.FromSeconds(cacheDefaultExpirationTime)));
+            });
             return builder.Build();
         }
 
