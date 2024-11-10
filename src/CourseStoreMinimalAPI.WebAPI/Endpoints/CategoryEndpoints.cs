@@ -20,37 +20,39 @@ namespace CourseStoreMinimalAPI.WebAPI.Endpoints
             return app;
         }
 
-        static async Task<Ok<List<Category>>> GetCategory(CategoryServices services)
+        static async Task<Ok<List<CategoryResponse>>> GetCategory(CategoryServices services, IMapper mapper)
         {
             var categories = await services.GetAll();
-            return TypedResults.Ok(categories);
+            var response = mapper.Map<List<CategoryResponse>>(categories);
+            return TypedResults.Ok(response);
 
         }
 
-        static async Task<Results<Ok<Category>, NotFound>> GetById(CategoryServices services, int Id)
+        static async Task<Results<Ok<CategoryResponse>, NotFound>> GetById(CategoryServices services, IMapper mapper, int Id)
         {
             var category = await services.GetById(Id);
             if (category == null)
             {
                 return TypedResults.NotFound();
             }
-            return TypedResults.Ok(category);
+            return TypedResults.Ok(mapper.Map<CategoryResponse>(category));
         }
 
-        static async Task<Created<Category>> Create(CategoryServices services, IMapper mapper, CreateCategoryRequest request)
+        static async Task<Created<CategoryResponse>> Create(CategoryServices services, IMapper mapper, CreateCategoryRequest request)
         {
             var category = mapper.Map<Category>(request);
             var result = await services.Create(category);
-            return TypedResults.Created($"/categories/{result}", category);
+            return TypedResults.Created($"/categories/{result}", mapper.Map<CategoryResponse>(category));
         }
 
-        static async Task<Results<NotFound, NoContent>> Update(CategoryServices services, int id, Category category)
+        static async Task<Results<NotFound, NoContent>> Update(CategoryServices services,IMapper mapper, int id, CreateCategoryRequest request)
         {
             var exists = await services.Exists(id);
             if (!exists)
             {
                 return TypedResults.NotFound();
             }
+            var category = mapper.Map<Category>(request);
             category.Id = id;
             await services.Update(category);
             return TypedResults.NoContent();
