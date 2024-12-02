@@ -5,8 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace CourseStoreMinimalAPI.Entities;
-public sealed class Category: BaseEntity
+public abstract class BaseEntity
 {
-
-    public string Name { get; set; } = "";
+    public int Id { get; set; }
 }
