@@ -7,12 +7,15 @@ using Microsoft.AspNetCore.OutputCaching;
 using CourseStoreMinimalAPI.Endpoint.RequestsAndResponses;
 using Microsoft.AspNetCore.Mvc;
 using CourseStoreMinimalAPI.Entities;
+using CourseStoreMinimalAPI.Endpoint.Infrastructures;
 
 namespace CourseStoreMinimalAPI.Endpoint.Endpoints;
 
 public static class TeacherEndpoints
 {
     static string CacheKey = "teachers";
+    static string TeacherImageFolder = @"Images\Teachers";
+    static string DefaultTeacherImageName = "Default.jpg";
     private static string routePrefix;
     public static WebApplication MapTeachers(this WebApplication app, string prefix)
     {
@@ -26,9 +29,15 @@ public static class TeacherEndpoints
         return app;
     }
 
-    static async Task<Created<TeacherResponse>> Insert(TeacherService teacherService, IMapper mapper, IOutputCacheStore cacheStore, [FromForm] TeacherSaveRequest request)
+    static async Task<Created<TeacherResponse>> Insert(TeacherService teacherService, IMapper mapper, IOutputCacheStore cacheStore, IFileAdapter fileAdapter, [FromForm] TeacherSaveRequest request)
     {
         Teacher teacher = mapper.Map<Teacher>(request);
+        string fileName = DefaultTeacherImageName;
+        if (request.File is not null)
+        {
+            fileName = fileAdapter.InsertFile(request.File, TeacherImageFolder);
+        }
+        teacher.ImageUrl = fileName;
         int savedEntityId = await teacherService.Insert(teacher);
         await cacheStore.EvictByTagAsync(CacheKey, default);
 

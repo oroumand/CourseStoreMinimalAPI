@@ -4,6 +4,7 @@ using CourseStoreMinimalAPI.Endpoint.Endpoints;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 using AutoMapper;
+using CourseStoreMinimalAPI.Endpoint.Infrastructures;
 namespace CourseStoreMinimalAPI.Endpoint.Extensions;
 
 public static class HostingExtensions
@@ -13,6 +14,7 @@ public static class HostingExtensions
         AddRequestLog(builder);
         builder.Services.AddScoped<CategoryService>();
         builder.Services.AddScoped<TeacherService>();
+        builder.Services.AddScoped<IFileAdapter, LocalFileStorageAdapter>();
         builder.Services.AddOutputCache();
         builder.Services.AddOpenApi();
         builder.Services.AddAutoMapper(typeof(HostingExtensions));
@@ -25,13 +27,14 @@ public static class HostingExtensions
         app.MapOpenApi();
         app.MapScalarApiReference();
         app.UseHttpLogging();
+        app.UseStaticFiles();
         app.UseOutputCache();
 
         app.MapGet("/", () => "Hello World!");
 
         app.MapCategories("/cagegories");
         app.MapTeachers("/teachers");
-        
+
 
         return app;
     }
