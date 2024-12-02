@@ -30,6 +30,8 @@ public static class HostingExtensions
         app.MapGet("/", () => "Hello World!");
 
         app.MapCategories("/cagegories");
+        app.MapTeachers("/teachers");
+        
 
         return app;
     }

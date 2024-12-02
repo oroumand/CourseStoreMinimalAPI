@@ -46,6 +46,7 @@ public class TeacherService(CourseDbContext ctx)
     #region Commands
     public async Task<int> Insert(Teacher teacher)
     {
+        teacher.ImageUrl = "alirezaoroumand.jpg";
         await ctx.Teachers.AddAsync(teacher);
         await ctx.SaveChangesAsync();
         return teacher.Id;
