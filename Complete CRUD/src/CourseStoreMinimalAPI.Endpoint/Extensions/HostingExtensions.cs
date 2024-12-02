@@ -12,6 +12,7 @@ public static class HostingExtensions
     {
         AddRequestLog(builder);
         builder.Services.AddScoped<CategoryService>();
+        builder.Services.AddScoped<TeacherService>();
         builder.Services.AddOutputCache();
         builder.Services.AddOpenApi();
         builder.Services.AddAutoMapper(typeof(HostingExtensions));
