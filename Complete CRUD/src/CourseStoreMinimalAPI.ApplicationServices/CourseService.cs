@@ -24,6 +24,11 @@ public class CourseService(CourseDbContext ctx)
     {
         return await ctx.Courses.FirstOrDefaultAsync(c => c.Id == id);
     }
+
+    public async Task<Course?> GetCourseWithCommentAsync(int id)
+    {
+        return await ctx.Courses.Include(c=>c.Comments).FirstOrDefaultAsync(c => c.Id == id);
+    }
     public async Task<List<Course>> SearchAsync(string title, bool? isOnline)
     {
         var courseQuery = ctx.Courses.AsQueryable();
