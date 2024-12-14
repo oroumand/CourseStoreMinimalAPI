@@ -27,7 +27,7 @@ public class CourseService(CourseDbContext ctx)
 
     public async Task<Course?> GetCourseWithCommentAsync(int id)
     {
-        return await ctx.Courses.Include(c=>c.Comments).FirstOrDefaultAsync(c => c.Id == id);
+        return await ctx.Courses.Include(c => c.Comments).FirstOrDefaultAsync(c => c.Id == id);
     }
     public async Task<List<Course>> SearchAsync(string title, bool? isOnline)
     {
@@ -71,6 +71,17 @@ public class CourseService(CourseDbContext ctx)
     {
 
         ctx.Courses.Remove(courseForDelete);
+        await ctx.SaveChangesAsync();
+    }
+
+    public async Task AddTeacher(int id, int teacherId, int order)
+    {
+        Course course = ctx.Courses.FirstOrDefault(c => c.Id == id);
+        course.CourseTeachers.Add(new CourseTeacher
+        {
+            TeacherId = teacherId,
+            SortOrder = order
+        });
         await ctx.SaveChangesAsync();
     }
     #endregion

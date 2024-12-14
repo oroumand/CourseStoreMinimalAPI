@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CourseStoreMinimalAPI.ApplicationServices;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
@@ -14,5 +15,7 @@ public class Course : BaseEntity
     public DateTime EndDate { get; set; }
     public bool IsOnline { get; set; }
     public string ImageUrl { get; set; }
-    public List<Comment> Comments { get; set; }
+    public List<Comment> Comments { get; set; } = [];
+    public List<CourseTeacher> CourseTeachers{ get; set; } = [];
+    public List<CourseCategory> CourseCategories{ get; set; } = [];
 }

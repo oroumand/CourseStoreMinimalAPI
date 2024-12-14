@@ -23,8 +23,10 @@ public static class CourseEndpoints
         teacherGroup.MapGet("/totalCount", TotalCount);
         teacherGroup.MapGet("/search", Search);
         teacherGroup.MapGet("/{id:int}", GetById);
+        teacherGroup.MapGet("/GetWithComments/{id:int}", GetByIdWithComments);
         teacherGroup.MapPost("/", Insert).DisableAntiforgery();
         teacherGroup.MapPut("/{id:int}", Update).DisableAntiforgery();
+        teacherGroup.MapPut("/addTeacher/{id:int}/{teacherId:int}/{sortOrder:int}", AddTeacher).DisableAntiforgery();
         teacherGroup.MapDelete("/{id:int}", Delete);
         return app;
     }
@@ -60,6 +62,20 @@ public static class CourseEndpoints
         var response = mapper.Map<CourseResponse>(result);
         return TypedResults.Ok<CourseResponse>(response);
     }
+
+
+
+    static async Task<Results<NotFound, Ok<CourseWithCommentResponse>>> GetByIdWithComments(CourseService courseService, IMapper mapper, int id)
+    {
+        var result = await courseService.GetCourseWithCommentAsync(id);
+        if (result == null)
+        {
+            return TypedResults.NotFound();
+        }
+        var response = mapper.Map<CourseWithCommentResponse>(result);
+        return TypedResults.Ok<CourseWithCommentResponse>(response);
+    }
+
     static async Task<Created<CourseResponse>> Insert(CourseService courseService, IMapper mapper, IOutputCacheStore cacheStore, IFileAdapter fileAdapter, [FromForm] CourseSaveRequest request)
     {
         Course course = mapper.Map<Course>(request);
@@ -111,6 +127,19 @@ public static class CourseEndpoints
         fileAdapter.DeleteFile(course.ImageUrl, CourseImageFolder);
 
         await courseService.Delete(course);
+        await cacheStore.EvictByTagAsync(CacheKey, default);
+        return TypedResults.NoContent();
+    }
+
+
+    static async Task<Results<NoContent, NotFound>> AddTeacher(CourseService courseService, IMapper mapper, IOutputCacheStore cacheStore, IFileAdapter fileAdapter, int id, int teacherId,int sortOrder)
+    {
+        if (!await courseService.Exists(id))
+        {
+            return TypedResults.NotFound();
+        }
+        
+        await courseService.AddTeacher(id,teacherId,sortOrder);
         await cacheStore.EvictByTagAsync(CacheKey, default);
         return TypedResults.NoContent();
     }

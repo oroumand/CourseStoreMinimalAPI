@@ -22,3 +22,8 @@ public class CourseResponse
     public bool IsOnline { get; set; }
     public string ImageUrl { get; set; }
 }
+
+public class CourseWithCommentResponse:CourseResponse
+{
+    public List<CommentResponse> Comments { get; set; } = [];
+}

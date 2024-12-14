@@ -1,4 +1,5 @@
-﻿using CourseStoreMinimalAPI.DAL.Configuration;
+﻿using CourseStoreMinimalAPI.ApplicationServices;
+using CourseStoreMinimalAPI.DAL.Configuration;
 using CourseStoreMinimalAPI.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,4 +27,6 @@ public class CourseDbContext : DbContext
     public DbSet<Teacher> Teachers { get; set; }
     public DbSet<Course> Courses { get; set; }
     public DbSet<Comment> Comments { get; set; }
+    public DbSet<CourseCategory> CourseCategories { get; set; }
+    public DbSet<CourseTeacher> CourseTeachers { get; set; }
 }

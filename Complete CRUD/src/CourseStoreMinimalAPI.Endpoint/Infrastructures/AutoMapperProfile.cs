@@ -14,5 +14,9 @@ public class AutoMapperProfile : Profile
         CreateMap<TeacherResponse, Teacher>().ReverseMap();
         CreateMap<CourseResponse, Course>().ReverseMap();
         CreateMap<CourseSaveRequest, Course>().ReverseMap();
+        CreateMap<CourseWithCommentResponse, Course>().ReverseMap();
+        CreateMap<CommentResponse, Comment>().ReverseMap();
+        CreateMap<CommentRequest, Comment>().ReverseMap();
+
     }
 }
