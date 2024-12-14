@@ -14,6 +14,7 @@ public static class HostingExtensions
         AddRequestLog(builder);
         builder.Services.AddScoped<CategoryService>();
         builder.Services.AddScoped<TeacherService>();
+        builder.Services.AddScoped<CourseService>();
         builder.Services.AddScoped<IFileAdapter, LocalFileStorageAdapter>();
         builder.Services.AddOutputCache();
         builder.Services.AddOpenApi();
@@ -34,6 +35,7 @@ public static class HostingExtensions
 
         app.MapCategories("/cagegories");
         app.MapTeachers("/teachers");
+        app.MapCourses("/courses");
 
 
         return app;

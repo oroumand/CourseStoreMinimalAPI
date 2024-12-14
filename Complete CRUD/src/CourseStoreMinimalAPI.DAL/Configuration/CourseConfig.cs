@@ -15,6 +15,7 @@ public class CourseConfig : IEntityTypeConfiguration<Course>
         builder.Property(c => c.Title).HasMaxLength(200);
         builder.Property(c => c.Description).HasMaxLength(1000);
         builder.Property(c => c.ImageUrl).IsRequired().HasMaxLength(200).IsUnicode(false);
+        builder.HasMany(c => c.Comments).WithOne().HasForeignKey(c => c.CourseId).OnDelete(DeleteBehavior.Cascade);
 
     }
 }

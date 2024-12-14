@@ -25,4 +25,5 @@ public class CourseDbContext : DbContext
     public DbSet<Category> Categories { get; set; }
     public DbSet<Teacher> Teachers { get; set; }
     public DbSet<Course> Courses { get; set; }
+    public DbSet<Comment> Comments { get; set; }
 }

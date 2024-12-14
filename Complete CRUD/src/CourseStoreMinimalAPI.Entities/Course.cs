@@ -14,4 +14,5 @@ public class Course : BaseEntity
     public DateTime EndDate { get; set; }
     public bool IsOnline { get; set; }
     public string ImageUrl { get; set; }
+    public List<Comment> Comments { get; set; }
 }
