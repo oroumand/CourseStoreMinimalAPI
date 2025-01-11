@@ -12,11 +12,11 @@ namespace CourseStoreMinimalAPI.Endpoint.Endpoints;
 
 public static class CategoryEndpoints
 {
-    static string CacheKey = "categoris";
+    static string CacheKey = "categories";
     public static WebApplication MapCategories(this WebApplication app, string prefix)
     {
         var categoryGroup = app.MapGroup(prefix);
-        categoryGroup.MapGet("/", GetList).RequireAuthorization().CacheOutput(c => { c.Expire(TimeSpan.FromMinutes(15)).Tag(CacheKey); }).AddEndpointFilter<LoggerFilter>();
+        categoryGroup.MapGet("/", GetList).RequireAuthorization();//.CacheOutput(c => { c.Expire(TimeSpan.FromMinutes(15)).Tag(CacheKey); }).AddEndpointFilter<LoggerFilter>();
         categoryGroup.MapGet("/{id:int}", GetById);
         categoryGroup.MapPost("/", Insert).AddEndpointFilter<ValidationFilter<CategoryRequest>>();
         categoryGroup.MapPut("/{id:int}", Update).AddEndpointFilter<ValidationFilter<CategoryRequest>>();

@@ -9,6 +9,7 @@ using FluentValidation;
 using CourseStoreMinimalAPI.Endpoint.RequestsAndResponses;
 using CourseStoreMinimalAPI.DAL.Migrations;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 namespace CourseStoreMinimalAPI.Endpoint.Extensions;
 
 public static class HostingExtensions
@@ -23,7 +24,19 @@ public static class HostingExtensions
         builder.Services.AddScoped<IFileAdapter, LocalFileStorageAdapter>();
 
         //builder.Services.AddOutputCache();
-        builder.Services.AddAuthentication("Bearer").AddJwtBearer();
+        builder.Services.AddAuthentication("Bearer").AddJwtBearer(c =>
+        {
+            c.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                ValidAudience = builder.Configuration["Jwt:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+            };
+        });
         builder.Services.AddAuthorization();
         var redisCnn = builder.Configuration.GetConnectionString("redis");
         builder.Services.AddStackExchangeRedisOutputCache(c =>
@@ -50,11 +63,12 @@ public static class HostingExtensions
         app.UseHttpLogging();
         app.UseStaticFiles();
         app.UseOutputCache();
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.MapGet("/", () => "Hello World!");
 
-        app.MapCategories("/cagegories");
+        app.MapCategories("/categories");
         app.MapUsers("/users");
         app.MapTeachers("/teachers");
         app.MapCourses("/courses");
